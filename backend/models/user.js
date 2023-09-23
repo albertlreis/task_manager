@@ -15,6 +15,8 @@ const User = sequelize.define('User', {
         type: DataTypes.STRING,
         allowNull: true, // Defina como true se for opcional
     }
+}, {
+    tableName: 'users'
 });
 
 export default User;

@@ -1,6 +1,7 @@
 import express from 'express';
 import { config } from 'dotenv';
 import authRoutes from './routes/authRoutes.mjs';
+import projectRoutes from './routes/projectRoutes.mjs';
 import taskRoutes from './routes/taskRoutes.mjs';
 
 config(); // Isso carregará automaticamente as variáveis de ambiente do arquivo .env
@@ -12,6 +13,9 @@ app.use(express.json());
 
 // Rotas de autenticação
 app.use('/auth', authRoutes);
+
+// Rotas de projetos
+app.use('/projects', projectRoutes);
 
 // Rotas protegidas com autenticação
 app.use('/api/tasks', taskRoutes);
