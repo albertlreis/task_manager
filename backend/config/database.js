@@ -1,10 +1,14 @@
-const { Sequelize } = require('sequelize');
+import { Sequelize } from 'sequelize';
+import dotenv from 'dotenv';
 
-// Carregue as configurações do arquivo config.json
-const env = process.env.NODE_ENV || 'development';
-const config = require('../config/config.json')[env];
+dotenv.config();
 
-// Inicialize o Sequelize com as configurações do arquivo config.json
-const sequelize = new Sequelize(config.database, config.username, config.password, config);
+const sequelize = new Sequelize({
+    database: process.env.DB_NAME,
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    host: process.env.DB_HOST, // Usar o nome do serviço do banco de dados definido no docker-compose.yml
+    dialect: 'postgres',
+});
 
-module.exports = sequelize;
+export default sequelize;

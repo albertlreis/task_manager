@@ -34,7 +34,7 @@ class AuthController {
     }
 
     static async register(req, res) {
-        const { email, password, full_name, oauth_provider, oauth_id } = req.body;
+        const { email, password, name } = req.body;
 
         try {
             const existingUser = await User.findOne({ where: { email } });
@@ -47,9 +47,7 @@ class AuthController {
             const newUser = await User.create({
                 email,
                 password: hashedPassword,
-                full_name,
-                oauth_provider,
-                oauth_id,
+                name
             });
 
             const token = AuthController.generateToken(newUser.id);

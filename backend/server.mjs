@@ -16,7 +16,7 @@ app.use('/auth', authRoutes);
 // Rotas protegidas com autenticação
 app.use('/api/tasks', taskRoutes);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3500;
 app.listen(PORT, () => {
     console.log(`Servidor está executando na porta ${PORT}`);
 });
