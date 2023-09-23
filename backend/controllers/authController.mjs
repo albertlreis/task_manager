@@ -1,35 +1,64 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import User from '../models/user.js';
+import User from '../models/user.js'; // Importe o modelo User
 
 const SECRET_KEY = 'sua_chave_secreta';
 
-function generateToken(userId) {
-    return jwt.sign({ userId }, SECRET_KEY, { expiresIn: '1h' });
+class AuthController {
+    static generateToken(userId) {
+        return jwt.sign({ userId }, SECRET_KEY, { expiresIn: '1h' });
+    }
+
+    static async login(req, res) {
+        const { email, password } = req.body;
+
+        try {
+            const user = await User.findOne({ where: { email } });
+
+            if (!user) {
+                return res.status(401).json({ message: 'Usuário não encontrado.' });
+            }
+
+            const isValidPassword = await bcrypt.compare(password, user.password);
+
+            if (!isValidPassword) {
+                return res.status(401).json({ message: 'Senha incorreta.' });
+            }
+
+            const token = AuthController.generateToken(user.id);
+            res.status(200).json({ token });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Erro interno do servidor.' });
+        }
+    }
+
+    static async register(req, res) {
+        const { email, password, full_name, oauth_provider, oauth_id } = req.body;
+
+        try {
+            const existingUser = await User.findOne({ where: { email } });
+
+            if (existingUser) {
+                return res.status(400).json({ message: 'Este email já está em uso.' });
+            }
+
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const newUser = await User.create({
+                email,
+                password: hashedPassword,
+                full_name,
+                oauth_provider,
+                oauth_id,
+            });
+
+            const token = AuthController.generateToken(newUser.id);
+            res.status(201).json({ token });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Erro interno do servidor.' });
+        }
+    }
 }
 
-export const login = async (req, res) => {
-    const { email, password } = req.body;
-
-    try {
-        const user = await User.findOne({ where: { email } });
-
-        if (!user) {
-            return res.status(401).json({ message: 'Usuário não encontrado.' });
-        }
-
-        const isValidPassword = await bcrypt.compare(password, user.password);
-
-        if (!isValidPassword) {
-            return res.status(401).json({ message: 'Senha incorreta.' });
-        }
-
-        // Você pode acessar os novos campos como user.full_name, user.oauth_provider, user.oauth_id
-
-        const token = generateToken(user.id);
-        res.status(200).json({ token });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Erro interno do servidor.' });
-    }
-};
+export default AuthController;
