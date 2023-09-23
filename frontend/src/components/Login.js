@@ -3,6 +3,7 @@ import {useHistory} from 'react-router-dom';
 import {Button, Container, TextField, Typography} from '@mui/material';
 import api from "../api/api";
 import {useAuth} from "../context/AuthContext";
+import Cookies from 'js-cookie';
 
 function Login() {
     const {login} = useAuth();
@@ -24,7 +25,7 @@ function Login() {
             if (response.status === 200) {
                 const token = response.data.token;
                 login();
-                localStorage.setItem('token', token);
+                Cookies.set('token', token);
                 history.push('/');
             } else {
                 setError('Falha ao fazer login. Verifique seu e-mail e senha.');
