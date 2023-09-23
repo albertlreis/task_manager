@@ -19,7 +19,7 @@ module.exports = {
       user_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Users', // A tabela de referência (usuários)
+          model: 'users', // A tabela de referência (usuários)
           key: 'id', // A coluna de referência (id)
         },
         allowNull: false,
