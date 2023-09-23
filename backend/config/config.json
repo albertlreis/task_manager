@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "hailiving",
+    "database": "task_manager",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "postgres",
+    "password": "",
+    "database": "task_manager",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "postgres",
+    "password": "",
+    "database": "task_manager",
+    "host": "localhost",
+    "dialect": "postgres"
+  }
+}
