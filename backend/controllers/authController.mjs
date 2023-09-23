@@ -1,12 +1,12 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import User from '../models/user.js'; // Importe o modelo User
+import User from '../models/user.js';
 
-const SECRET_KEY = 'sua_chave_secreta';
+const SECRET_KEY = process.env.SECRET_KEY;
 
 class AuthController {
-    static generateToken(userId) {
-        return jwt.sign({ userId }, SECRET_KEY, { expiresIn: '1h' });
+    static generateToken(user) {
+        return jwt.sign({ user_id: user.id, email: user.email }, SECRET_KEY, { expiresIn: '1h' });
     }
 
     static async login(req, res) {
@@ -25,7 +25,7 @@ class AuthController {
                 return res.status(401).json({ message: 'Senha incorreta.' });
             }
 
-            const token = AuthController.generateToken(user.id);
+            const token = AuthController.generateToken(user);
             res.status(200).json({ token });
         } catch (error) {
             console.error(error);
